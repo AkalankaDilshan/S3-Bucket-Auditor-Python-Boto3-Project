@@ -17,12 +17,25 @@ for j in name_list:
     policy = client.get_public_access_block(
         Bucket = j
     )
+    
+    #encryption
+    encryption_rule = client.get_bucket_encryption(
+        Bucket = j
+    )
     print(f'\n\nBucket name: {j}')
+    print(encryption_rule['ServerSideEncryptionConfiguration'])
+    # bucket public access or not
     for key, value in policy['PublicAccessBlockConfiguration'].items():
         print(f'{key} : {value}')
+        
+        
+    
+  
 
 
 # missing encryption
+
+
 
 # bucket versioning
 
