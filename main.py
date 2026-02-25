@@ -32,7 +32,8 @@ def bucket_lifecycle_configuration(bucket_name):
 # main loop
 for j in name_list:
     print(f'\n\nBucket name: {j}')
-    # missing encryption
+    # bucket encryption
+    #want error handling
     encryption_rule = client.get_bucket_encryption(
         Bucket = j
     )
@@ -50,6 +51,7 @@ for j in name_list:
     bucket_lifecycle_configuration(j)
     
     # bucket public access or not
+    #want error handling
     policy = client.get_public_access_block(
         Bucket = j
     )
