@@ -36,7 +36,7 @@ for j in name_list:
     encryption_rule = client.get_bucket_encryption(
         Bucket = j
     )
-    print(encryption_rule['ServerSideEncryptionConfiguration'])
+    print(f'Bucket encryption rule: {encryption_rule['ServerSideEncryptionConfiguration']}')
     
     # bucket versioning
     versioning_response = client.get_bucket_versioning(
