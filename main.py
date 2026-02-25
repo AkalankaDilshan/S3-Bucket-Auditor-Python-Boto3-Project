@@ -71,21 +71,26 @@ def bucket_public_access_checker(bucket_name: str) -> bool:
         return False
     return True
         
-# main loop
-for b_name in name_list:
-    print(f'\n\nBucket name: {b_name}')
+# main function
+def main():
+    for b_name in name_list:
+        print(f'\n\nBucket name: {b_name}')
     
-    # bucket encryption
-    bucket_encryption(b_name)
+        # bucket encryption
+        bucket_encryption(b_name)
     
-    # bucket versioning
-    bucket_versioning(b_name)
+        # bucket versioning
+        bucket_versioning(b_name)
     
-    # Bucket lifecycle 
-    bucket_lifecycle_configuration(b_name)
+        # Bucket lifecycle 
+        bucket_lifecycle_configuration(b_name)
     
-    # bucket public access or not
-    bucket_public_access_checker(b_name)
+        # bucket public access or not
+        bucket_public_access_checker(b_name)
+    
+# With the guard    
+if __name__ == "__main__":
+    main()
         
 
 
