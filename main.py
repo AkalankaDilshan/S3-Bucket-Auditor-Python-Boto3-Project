@@ -7,12 +7,25 @@ client = boto3.client('s3')
 ## get all s3 bucket name and store it on list
 ## create list
 name_list = []
-
 bucket_name_list = client.list_buckets()
-
 for i in bucket_name_list['Buckets']:
     #print(f'{i['Name']}\n\n')
     name_list.append(i['Name'])
+
+# bucket encryption function
+def bucket_encryption(bucket_name: str) -> bool:
+    try: 
+        encryption_rule = client.get_bucket_encryption(
+            Bucket = bucket_name
+        )
+        print(f'Bucket encryption rule: {encryption_rule['ServerSideEncryptionConfiguration']}')
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
+            print("WARNING: No encryption configured!")
+        else:
+            print(f"Error checking encryption for {bucket_name}: {e}")
+        return False
+    return True
 
 # bucket life cycle function
 def bucket_lifecycle_configuration(bucket_name):
@@ -32,12 +45,10 @@ def bucket_lifecycle_configuration(bucket_name):
 # main loop
 for j in name_list:
     print(f'\n\nBucket name: {j}')
+    
     # bucket encryption
-    #want error handling
-    encryption_rule = client.get_bucket_encryption(
-        Bucket = j
-    )
-    print(f'Bucket encryption rule: {encryption_rule['ServerSideEncryptionConfiguration']}')
+    ## call encryption function
+    bucket_encryption(j)
     
     # bucket versioning
     versioning_response = client.get_bucket_versioning(
