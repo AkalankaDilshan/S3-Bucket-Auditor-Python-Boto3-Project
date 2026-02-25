@@ -2,7 +2,7 @@ import boto3
 
 client = boto3.client('s3')
 
-## get all s3 bucket name and store it on stack
+## get all s3 bucket name and store it on list
 ## create list
 name_list = []
 
@@ -15,11 +15,19 @@ for i in bucket_name_list['Buckets']:
 # bucket public access or not
 for j in name_list:
     print(f'\n\nBucket name: {j}')
-    #encryption
+    # missing encryption
     encryption_rule = client.get_bucket_encryption(
         Bucket = j
     )
     print(encryption_rule['ServerSideEncryptionConfiguration'])
+    
+    # bucket versioning
+    versioning_response = client.get_bucket_versioning(
+        Bucket = j
+    )
+    
+    versioning_status = versioning_response.get('Status', 'Disabled')
+    print(f'Bucket verioning {versioning_status}') 
     
     # bucket public access or not
     policy = client.get_public_access_block(
@@ -28,16 +36,7 @@ for j in name_list:
     for key, value in policy['PublicAccessBlockConfiguration'].items():
         print(f'{key} : {value}')
         
-        
-    
-  
 
-
-# missing encryption
-
-
-
-# bucket versioning
 
 # bucket life cycle 
 
