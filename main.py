@@ -40,6 +40,21 @@ def bucket_lifecycle_configuration(bucket_name):
         return False
     
     return True
+     
+     
+# bucket versioning function
+def bucket_versioning(bucket_name: str) -> bool:
+    try:
+        versioning_response = client.get_bucket_versioning(
+        Bucket = bucket_name
+        )
+        versioning_status = versioning_response.get('Status', 'Disabled')
+        print(f'Bucket verioning {versioning_status}') 
+        
+    except ClientError as e:
+        print(f'Error checking bucket versioning for {bucket_name}: {e}')
+        return False
+    return True     
       
 ## bucket public access rule checker function
 def bucket_public_access_checker(bucket_name: str) -> bool:
@@ -51,7 +66,7 @@ def bucket_public_access_checker(bucket_name: str) -> bool:
             print(f'{key} : {value}')
         
     except ClientError as e:
-        print(f"Error checking encryption for {bucket_name}: {e}")
+        print(f"Error checking public access for {bucket_name}: {e}")
         return False
     return True
         
@@ -63,12 +78,7 @@ for b_name in name_list:
     bucket_encryption(b_name)
     
     # bucket versioning
-    versioning_response = client.get_bucket_versioning(
-        Bucket = b_name
-    )
-    
-    versioning_status = versioning_response.get('Status', 'Disabled')
-    print(f'Bucket verioning {versioning_status}') 
+    bucket_versioning(b_name)
     
     # Bucket lifecycle 
     bucket_lifecycle_configuration(b_name)
