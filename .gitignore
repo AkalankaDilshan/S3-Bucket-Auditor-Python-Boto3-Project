@@ -208,3 +208,10 @@ __marimo__/
 
 # Recommendation
 RECOMMENDATION.md
+
+# AWS credentials & config
+*.pem
+*.key
+credentials
+aws_config.json
+.aws/
