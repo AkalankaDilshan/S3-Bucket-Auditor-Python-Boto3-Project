@@ -1,4 +1,6 @@
 import boto3
+import logging
+from botocore.exceptions import ClientError
 
 client = boto3.client('s3')
 
@@ -12,7 +14,22 @@ for i in bucket_name_list['Buckets']:
     #print(f'{i['Name']}\n\n')
     name_list.append(i['Name'])
 
-# bucket public access or not
+# bucket life cycle function
+def bucket_lifecycle_configuration(bucket_name):
+    try:
+        response = client.get_bucket_lifecycle(Bucket=bucket_name)
+        lifecycle_status = response.get ('Rules')
+        print(f'Lifecycle Rules: {lifecycle_status}')
+        
+    except ClientError as e:
+        #logging.error(e) ## if want to see log uncomment this one 
+        print('No Such Lifecycle Configuration')
+        return False
+    
+    return True
+        
+        
+# main loop
 for j in name_list:
     print(f'\n\nBucket name: {j}')
     # missing encryption
@@ -29,6 +46,9 @@ for j in name_list:
     versioning_status = versioning_response.get('Status', 'Disabled')
     print(f'Bucket verioning {versioning_status}') 
     
+    # Bucket lifecycle 
+    bucket_lifecycle_configuration(j)
+    
     # bucket public access or not
     policy = client.get_public_access_block(
         Bucket = j
@@ -38,5 +58,5 @@ for j in name_list:
         
 
 
-# bucket life cycle 
+
 
