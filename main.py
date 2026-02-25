@@ -30,7 +30,8 @@ def bucket_encryption(bucket_name: str) -> bool:
 # bucket life cycle function
 def bucket_lifecycle_configuration(bucket_name):
     try:
-        response = client.get_bucket_lifecycle(Bucket=bucket_name)
+        #response = client.get_bucket_lifecycle(Bucket=bucket_name) #Deprecated API: get_bucket_lifecycle so use new one
+        response = client.get_bucket_lifecycle_configuration(Bucket=bucket_name)
         lifecycle_status = response.get ('Rules')
         print(f'Lifecycle Rules: {lifecycle_status}')
         
