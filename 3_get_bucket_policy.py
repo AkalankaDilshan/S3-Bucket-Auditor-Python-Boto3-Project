@@ -1,7 +1,9 @@
 import boto3
 import json
+import os
 
 client = boto3.client('s3')
+ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 # list_bucket = client.list_buckets()
 
@@ -32,7 +34,7 @@ print(f'{bucket_policy_status['PolicyStatus']['IsPublic']}\n') ## get full clear
 # Retrieves the PublicAccessBlock configuration for S3
 s3_public_access_policy = client.get_public_access_block(
     Bucket='codepipeline-eu-north-1-3350963aa07b-4ea1-9a94-926cfb3be811',
-    ExpectedBucketOwner='375353319115' #account id
+    ExpectedBucketOwner=ACCOUNT_ID
 )
 
 print(s3_public_access_policy,"\n\n\n") # all thing with meta data

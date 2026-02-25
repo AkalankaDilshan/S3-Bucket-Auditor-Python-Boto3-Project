@@ -1,13 +1,15 @@
 import boto3 
 import logging
 from botocore.exceptions import ClientError
+import os
 
 client = boto3.client('s3')
+ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 try: 
     response = client.get_bucket_lifecycle(
         Bucket='akalanka-test-bucket4f45',
-        ExpectedBucketOwner='375353319115'
+        ExpectedBucketOwner=ACCOUNT_ID
     )
 
     #print(response) # get all data

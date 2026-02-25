@@ -1,10 +1,12 @@
 import boto3
+import os
 
 client = boto3.client('s3')
+ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 response = client.get_bucket_versioning(
     Bucket='akalanka-test-bucket4f45',
-    ExpectedBucketOwner='375353319115' #account id
+    ExpectedBucketOwner=ACCOUNT_ID #account id
 )
 
 print(response) # full one
