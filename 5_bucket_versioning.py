@@ -1,11 +1,16 @@
 import boto3
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv() ## this is compulsory 
 
 client = boto3.client('s3')
-ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
+ACCOUNT_ID = os.getenv("AWS_ACCOUNT_ID")
+BUCKET_NAME= os.getenv("TEST_BUCKET_NAME")
 
 response = client.get_bucket_versioning(
-    Bucket='akalanka-test-bucket4f45',
+    Bucket=BUCKET_NAME,
     ExpectedBucketOwner=ACCOUNT_ID #account id
 )
 

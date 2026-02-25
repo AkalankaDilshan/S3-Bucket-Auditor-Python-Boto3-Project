@@ -1,9 +1,14 @@
 import boto3
 import json
 import os
+from dotenv import load_dotenv
+
+#load env vars
+load_dotenv()
 
 client = boto3.client('s3')
-ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
+ACCOUNT_ID = os.getenv("AWS_ACCOUNT_ID")
+BUCKET_NAME = os.getenv("GOOD_BUCKET")
 
 # list_bucket = client.list_buckets()
 
@@ -12,7 +17,7 @@ ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")
 
 
 response = client.get_bucket_policy(
-    Bucket= "codepipeline-eu-north-1-3350963aa07b-4ea1-9a94-926cfb3be811",
+    Bucket= BUCKET_NAME,
 )
 # output The bucket policy as a JSON document.
 #print(response['Policy']) # mekan output ek enwa but set na.
@@ -23,7 +28,7 @@ print(f'{policy}\n\n\n')
 # get_bucket_policy_status
 
 bucket_policy_status = client.get_bucket_policy_status(
-    Bucket= "codepipeline-eu-north-1-3350963aa07b-4ea1-9a94-926cfb3be811",
+    Bucket= BUCKET_NAME,
 )
 
 print(bucket_policy_status,"\n") # get full policy status
@@ -33,7 +38,7 @@ print(f'{bucket_policy_status['PolicyStatus']['IsPublic']}\n') ## get full clear
 
 # Retrieves the PublicAccessBlock configuration for S3
 s3_public_access_policy = client.get_public_access_block(
-    Bucket='codepipeline-eu-north-1-3350963aa07b-4ea1-9a94-926cfb3be811',
+    Bucket=BUCKET_NAME,
     ExpectedBucketOwner=ACCOUNT_ID
 )
 
