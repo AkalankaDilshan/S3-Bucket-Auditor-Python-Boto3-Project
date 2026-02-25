@@ -40,34 +40,41 @@ def bucket_lifecycle_configuration(bucket_name):
         return False
     
     return True
+      
+## bucket public access rule checker function
+def bucket_public_access_checker(bucket_name: str) -> bool:
+    try:
+        policy = client.get_public_access_block(
+        Bucket = bucket_name
+        )
+        for key, value in policy['PublicAccessBlockConfiguration'].items():
+            print(f'{key} : {value}')
         
+    except ClientError as e:
+        print(f"Error checking encryption for {bucket_name}: {e}")
+        return False
+    return True
         
 # main loop
-for j in name_list:
-    print(f'\n\nBucket name: {j}')
+for b_name in name_list:
+    print(f'\n\nBucket name: {b_name}')
     
     # bucket encryption
-    ## call encryption function
-    bucket_encryption(j)
+    bucket_encryption(b_name)
     
     # bucket versioning
     versioning_response = client.get_bucket_versioning(
-        Bucket = j
+        Bucket = b_name
     )
     
     versioning_status = versioning_response.get('Status', 'Disabled')
     print(f'Bucket verioning {versioning_status}') 
     
     # Bucket lifecycle 
-    bucket_lifecycle_configuration(j)
+    bucket_lifecycle_configuration(b_name)
     
     # bucket public access or not
-    #want error handling
-    policy = client.get_public_access_block(
-        Bucket = j
-    )
-    for key, value in policy['PublicAccessBlockConfiguration'].items():
-        print(f'{key} : {value}')
+    bucket_public_access_checker(b_name)
         
 
 
