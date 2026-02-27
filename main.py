@@ -4,6 +4,13 @@ from botocore.exceptions import ClientError
 
 client = boto3.client('s3')
 
+
+class S3report:
+    def __init__(self, bucket_name):
+        self.bucket_name = bucket_name
+
+
+
 ## get all s3 bucket name and store it on list
 ## create list
 name_list = []
@@ -18,7 +25,10 @@ def bucket_encryption(bucket_name: str) -> bool:
         encryption_rule = client.get_bucket_encryption(
             Bucket = bucket_name
         )
+        
         print(f'Bucket encryption rule: {encryption_rule['ServerSideEncryptionConfiguration']}')
+    
+    
     except ClientError as e:
         if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
             print("WARNING: No encryption configured!")
@@ -80,13 +90,13 @@ def main():
         bucket_encryption(b_name)
     
         # bucket versioning
-        bucket_versioning(b_name)
+        #bucket_versioning(b_name)
     
         # Bucket lifecycle 
-        bucket_lifecycle_configuration(b_name)
+        #bucket_lifecycle_configuration(b_name)
     
         # bucket public access or not
-        bucket_public_access_checker(b_name)
+        #bucket_public_access_checker(b_name)
     
 # With the guard    
 if __name__ == "__main__":
