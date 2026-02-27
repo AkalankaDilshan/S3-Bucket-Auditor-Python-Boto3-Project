@@ -2,15 +2,41 @@ import boto3
 import logging
 from botocore.exceptions import ClientError
 
-client = boto3.client('s3')
+#client = boto3.client('s3')
 
 
 class S3report:
     def __init__(self, bucket_name):
         self.bucket_name = bucket_name
-
-
-
+        self.client = boto3.client('s3')
+        
+    # bucket encryption method
+    def bucket_encryption(self) -> bool:
+        try:
+            encryption_rule = self.client.get_bucket_encryption(Bucket = self.bucket_name)
+            print(f'Bucket encryption rule:{encryption_rule['ServerSideEncryptionConfiguration']}')
+        except ClientError as e :
+            if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
+                print("WARNING: No encryption configured!")
+            else:
+                print(f"Error checking encryption for {self.bucket_name}: {e}")
+                return False
+            return True
+    
+    # bucket life cycle module
+    def bucket_lifecycle_configuration(self) -> bool:
+        try:
+            #response = client.get_bucket_lifecycle(Bucket=bucket_name) #Deprecated API: get_bucket_lifecycle so use new one
+            response = self.client.get_bucket_lifecycle_configuration(Bucket=self.bucket_name)
+            lifecycle_status = response.get ('Rules')
+            print(f'Lifecycle Rules: {lifecycle_status}')
+        
+        except ClientError as e:
+            #logging.error(e) ## if want to see log uncomment this one 
+            print('No Such Lifecycle Configuration')
+            return False
+        return True
+            
 ## get all s3 bucket name and store it on list
 ## create list
 name_list = []
@@ -19,23 +45,6 @@ for i in bucket_name_list['Buckets']:
     #print(f'{i['Name']}\n\n')
     name_list.append(i['Name'])
 
-# bucket encryption function
-def bucket_encryption(bucket_name: str) -> bool:
-    try: 
-        encryption_rule = client.get_bucket_encryption(
-            Bucket = bucket_name
-        )
-        
-        print(f'Bucket encryption rule: {encryption_rule['ServerSideEncryptionConfiguration']}')
-    
-    
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
-            print("WARNING: No encryption configured!")
-        else:
-            print(f"Error checking encryption for {bucket_name}: {e}")
-        return False
-    return True
 
 # bucket life cycle function
 def bucket_lifecycle_configuration(bucket_name):
