@@ -1,9 +1,39 @@
-# S3-Bucket-Auditor-Python-Boto3-Project
+# S3 Bucket Auditor
 
-scan all buckets for public access, missing encryption, and no versioning. Output a report.
+A simple Python script that checks all your AWS S3 buckets and tells you if any of them have security issues.
 
+## What it does
 
-**Recommendation:** Minimum IAM policy:
+It scans every S3 bucket in your AWS account and checks four things:
+
+- **Encryption** — Is the bucket encrypted?
+- **Versioning** — Is versioning turned on?
+- **Lifecycle Rules** — Are there any lifecycle rules set up?
+- **Public Access** — Is the bucket blocking public access?
+
+It then prints a report in your terminal for each bucket.
+
+## Requirements
+
+- Python 3
+- AWS credentials configured on your machine (`aws configure`)
+- The `boto3` library installed
+
+```bash
+pip install boto3
+```
+
+## How to run
+
+```bash
+python main.py
+```
+
+That's it. The script will automatically find all your buckets and check each one.
+
+## AWS Permissions needed
+
+Your AWS user or role needs these permissions:
 
 ```json
 {
@@ -16,9 +46,7 @@ scan all buckets for public access, missing encryption, and no versioning. Outpu
         "s3:GetBucketEncryption",
         "s3:GetBucketVersioning",
         "s3:GetBucketLifecycleConfiguration",
-        "s3:GetBucketPublicAccessBlock",
-        "s3:GetBucketPolicy",
-        "s3:GetBucketPolicyStatus"
+        "s3:GetBucketPublicAccessBlock"
       ],
       "Resource": "*"
     }
